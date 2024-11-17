@@ -1,0 +1,59 @@
+from flask import flask, request
+app = flask(__name__)
+from flask_sqlalchemy import SQLAlchemy
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+db = SQLAlchemy(app)
+
+
+class Books(db.model):
+     id = db.Column(integer, primary_key=True)
+     book_name = db.Column(db.String(100), unique=True, nullable=False)
+     description = db.Column(db.String(120))
+     author = db.Column(db.String(200))
+     publisher = db.column(db.string(100))
+
+    def __repr__(self):
+        return f"{self.name} - {self.description}"
+
+
+@app.route('/')
+def index():
+    retun 'Hello!'
+
+
+@app.route('/Books')
+def get_books():
+    books = books.query.all()
+
+output = []
+for book in books
+    book_data = { 'id': book.id, 'name': book.name,
+                 'description': book.description, 'author': book.author, 
+                 'publisher': book.publisher}
+   
+   output.append(book_data)
+
+   
+return {"Books": output}
+    
+@app.route('/books/<id>')
+def get_books(id):
+     book = book.query.get or 404(id)
+     return ({"name": book.name, "description": book.description,'author': book.author, 
+                 'publisher': book.publisher })
+
+@app.route('/books', methods=['POST'])
+def add_book():
+     book = Book(name=request.json['name'], description=request.json['description'])
+     db.session.add(book)
+     db.session.commit()
+     return {'id': book.id}
+
+
+@app.route('/book/<id>')
+def delete_book():
+     book= book.query.get(id)
+     db.session.delete(book)
+     db.session.commit() 
